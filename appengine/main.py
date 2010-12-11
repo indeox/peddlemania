@@ -98,7 +98,7 @@ def main():
 
 										('/hiscores', HiScoreHandler),
 										('/u/new', NewUserHandler), 
-										('/us/authorise', AuthoriseUserHandler),
+										('/u/authorise', AuthoriseUserHandler),
 										('/u/authorise/complete', AuthoriseUserCompleteHandler),
 										('/u/(.*)', UserHandler),
 										],
