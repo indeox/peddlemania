@@ -43,6 +43,9 @@ class ViewController(webapp.RequestHandler):
 	def head(self, *args):
 		pass
   
+  	def error(self, error_message):
+  		return self.output('error', { 'error': True, 'message': error_message})
+  
 	def output(self, template_name, template_values={}, **kargs):
 	
 		values = {

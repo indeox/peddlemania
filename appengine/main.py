@@ -162,15 +162,17 @@ class ChallengeHandler(ViewController):
 		journey = models.Journey.get(from_id, to_id)
 		
 		if distance is None or distance <= 0 or distance == '':
-			logging.info('Distance must be a float')
-			return
+			return self.error('Distance must be a float')
+			
+		if (from_id is None or to_id is None) or (from_id == '' or to_id == ''):
+			return self.error('Must provide From and To locations')
 		
 		if journey is None:
 			j_key = models.Journey.generate_key(from_id, to_id)
 			journey = models.Journey(key_name=j_key, distance=float(distance))
 		
 		logging.info(journey)
-
+		logging.info(journey.key())
 		q = models.UserJourney.gql("WHERE  ANCESTOR IS :parent", parent=journey.key())
 		user_journey = q.get()
 		logging.info(user_journey)
