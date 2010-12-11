@@ -1,11 +1,11 @@
 geo = {
     firstRun: true,
     updatePosition: function(position) {
-        console.log('update position');
+        //console.log('update position');
         //pm.status.position.lat = position.coords.latitude;
         //pm.status.position.lon = position.coords.longitude;        
-        pm.status.position.lon = 51.51333;
-        pm.status.position.lat =  -0.088947;        
+        pm.status.position.lat = 51.51333;
+        pm.status.position.lon =  -0.088947;        
 
         pm.status.destination = {};
         pm.status.destination.lat = 51.51333;
