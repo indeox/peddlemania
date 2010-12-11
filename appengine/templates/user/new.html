@@ -1,12 +1,26 @@
 {% extends "../base.html" %}
 
-{% block content %}
-{% if message %}<span class="error">{{ message }}</span>{% endif %}
+{% block pages %}
 
-{% if not auth %}
-<a href="/u/authorise">Login via Twitter</a>
-{% else %}
-user authorised 
-{% endif %}
+<div data-role="page" id="sign-in">
+	<div data-role="header">
+		<h1>Sign In</h1>
+	</div>
+
+	<div data-role="content">
+		{% if message %}<span class="error">{{ message }}</span>{% endif %}
+		<p>	
+			{% if not auth %}
+				<a href="/u/authorise">Login via Twitter</a>
+			{% else %}
+				user authorised 
+			{% endif %}
+		</p>
+	</div>
+
+	<div data-role="footer">
+		Footer
+	</div>
+</div>
 
 {% endblock %}

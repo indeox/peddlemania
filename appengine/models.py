@@ -12,23 +12,24 @@ import sys ##getdefaultencoding()
 import pprint
 import string
 
-	
+
+
 
 class User(db.Model):
 	user_id = db.StringProperty()
 	name = db.TextProperty()
 	image = db.StringProperty()
   	total_score = db.IntegerProperty(default=0)
-  	journeys = db.ListProperty()
-  
-
+  	journeys = db.ListProperty(db.Key)
+ 
+	
 class Journey(db.Model):
 	from_id = db.IntegerProperty()
 	to_id = db.IntegerProperty()
 	distance = db.FloatProperty()
-	fastest_user = db.ReferenceProperty(User)
+	#fastest_user = db.ReferenceProperty(User)
 	num_of_journeys = db.IntegerProperty(default=0)
-	highest_scoring_user = db.ReferenceProperty(User)
+	#highest_scoring_user = db.ReferenceProperty(User)
 	
 	@classmethod
 	def generate_key(cls, from_id, to_id):
@@ -38,9 +39,21 @@ class Journey(db.Model):
 	def get(cls, from_id, to_id):
 		key = cls.generate_key(from_id, to_id)
 		return cls.get_by_key_name(key)
+
+
+class UserJourney(db.Model):
+ 	journey = db.ReferenceProperty(Journey)
+ 	date = db.DateTimeProperty(auto_add_now=True)
+ 	completed_time = db.StringProperty()
+ 	fullness_score = db.IntegerProperty(default=0)
+ 	incomplete = db.BooleanProperty(default=True)
+ 	score = db.IntegerProperty(default=0)
+ 	
+
 	
 class HighScores(db.Model):
-	journey = db.ReferenceProperty()
+	#journey = db.ReferenceProperty()
+	pass
 
 
 class HiScore(db.Model):

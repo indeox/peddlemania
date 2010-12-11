@@ -42,9 +42,13 @@ OAUTH_APP_SETTINGS = {
     }
 
 
-class MainHandler(webapp.RequestHandler):
+class MainHandler(ViewController):
 	def get(self):
-		self.response.out.write('Hello world!')
+	
+		#if (self.isAuthenticated()):
+		return self.output('home')
+		#else:
+		#	return self.redirect('/u/new')
 
 
 class AuthoriseUserCompleteHandler(ViewController):

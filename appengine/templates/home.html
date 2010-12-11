@@ -7,26 +7,15 @@
 	</div>
 
 	<div data-role="content">	
-		<p>Welcome XX</p>		
-		<p class="stats"></p>
-	</div>
-
-	<div data-role="footer">
-		Footer
-	</div>
-</div>
-
-<div data-role="page" id="leaderboard">
-	<div data-role="header">
-		<h1>Leaderboard</h1>
-	</div>
-
-	<div data-role="content">	
-		<p>Welcome XX</p>		
-		<ol>
-			<li>YY</li>
-			<li>XX</li>
-		</ol>
+		<h2>Welcome {{user.name}}</h2>
+		<img src="{{user.image}}" />		
+		<p class="stats">
+			Your total score is <span>{{user.no_of_journeys}}</span> which you have collected
+			on {{user.no_of_journeys}}. You're currently ranked x of x peddlemaniacs.
+		</p>
+		<a href="/challenge" data-role="button" data-theme="e">Start peddling!</a>
+		<a href="/highscores" data-role="button">View high scores</a>
+		<a href="/user/history" data-role="button">View old journeys</a>
 	</div>
 
 	<div data-role="footer">
