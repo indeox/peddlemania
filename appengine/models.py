@@ -12,16 +12,17 @@ import sys ##getdefaultencoding()
 import pprint
 import string
 
-	
+
+
 
 class User(db.Model):
 	user_id = db.StringProperty()
 	name = db.TextProperty()
 	image = db.StringProperty()
   	total_score = db.IntegerProperty(default=0)
-  	journeys = db.ListProperty()
-  
-
+  	journeys = db.ListProperty(db.Key)
+ 
+	
 class Journey(db.Model):
 	from_id = db.IntegerProperty()
 	to_id = db.IntegerProperty()
@@ -38,9 +39,12 @@ class Journey(db.Model):
 	def get(cls, from_id, to_id):
 		key = cls.generate_key(from_id, to_id)
 		return cls.get_by_key_name(key)
+
+
 	
 class HighScores(db.Model):
-	journey = db.ReferenceProperty()
+	#journey = db.ReferenceProperty()
+	pass
 
 
 class HiScore(db.Model):
