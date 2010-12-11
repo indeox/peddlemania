@@ -1,3 +1,12 @@
-Hello - want to sign in with Twitter?
+{% extends "../base.html" %}
 
-<a href="/u/authorise">yes please</a>
+{% block content %}
+{% if message %}<span class="error">{{ message }}</span>{% endif %}
+
+{% if not auth %}
+<a href="/u/authorise">Login via Twitter</a>
+{% else %}
+user authorised 
+{% endif %}
+
+{% endblock %}
