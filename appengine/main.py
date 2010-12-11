@@ -159,8 +159,11 @@ class ChallengeHandler(ViewController):
 		
 		logging.info(user_details)
 		
-		journey = models.Journey.get(from_id, to_id)
+		if user_details is None:
+			return self.error('No user found')
 		
+		journey = models.Journey.get(from_id, to_id)
+
 		if distance is None or distance <= 0 or distance == '':
 			return self.error('Distance must be a float')
 			
@@ -169,18 +172,17 @@ class ChallengeHandler(ViewController):
 		
 		if journey is None:
 			j_key = models.Journey.generate_key(from_id, to_id)
+			logging.info('Journey key: %s' % j_key)
 			journey = models.Journey(key_name=j_key, distance=float(distance))
+			journey.put()
 		
-		logging.info(journey)
-		logging.info(journey.key())
-		q = models.UserJourney.gql("WHERE  ANCESTOR IS :parent", parent=journey.key())
+		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2", user_details, journey)
 		user_journey = q.get()
-		logging.info(user_journey)
-		
+
 		if user_journey is None:
-			user_journey = models.UserJourney(parent=user_details, journey=journey)
+			user_journey = models.UserJourney(user=user_details, journey=journey)
+			user_journey.put()
 		
-		logging.info(user_journey)
 			
 		return
 		

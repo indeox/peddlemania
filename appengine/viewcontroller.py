@@ -87,7 +87,7 @@ class ViewController(webapp.RequestHandler):
 	def getUserDetails(self, oauth_token=None):
 		if oauth_token is None:
 			oauth_token = self.request.cookies.get('oauth_token')
-		
+
 		if oauth_token is not None:
 			token = models.OAuthAccessToken.get_by_key_name(oauth_token)
 			if token:
