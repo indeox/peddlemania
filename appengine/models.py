@@ -34,20 +34,11 @@ class HiScore(db.Model):
   last_score = db.DateTimeProperty(auto_now_add=False)
 
 
-class OAuthRequestToken(db.Model):
-	"""OAuth Request Token."""
-
-	service = db.StringProperty()
-	oauth_token = db.StringProperty()
-	oauth_token_secret = db.StringProperty()
-	created = db.DateTimeProperty(auto_now_add=True)
-
 class OAuthAccessToken(db.Model):
 	"""OAuth Access Token."""
 
-	service = db.StringProperty()
-	## specifier should contain the user_id
-	specifier = db.StringProperty()
+	user_id = db.StringProperty()
+	user = db.ReferenceProperty(User)
 	oauth_token = db.StringProperty()
 	oauth_token_secret = db.StringProperty()
 	created = db.DateTimeProperty(auto_now_add=True)
