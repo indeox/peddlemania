@@ -175,7 +175,7 @@ class ChallengeCompleteHandler(ViewController):
 		user_journey.incomplete = False
 		start_end_diff = datetime.now() - user_journey.date
 		user_journey.completed_time = unicode(start_end_diff)
-		#user_journey.score = score
+		user_journey.score = score
 		user_journey.put()
 		
 		user_details.total_score += score
