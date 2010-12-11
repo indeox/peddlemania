@@ -30,6 +30,15 @@ class Journey(db.Model):
 	num_of_journeys = db.IntegerProperty(default=0)
 	highest_scoring_user = db.ReferenceProperty(User)
 	
+	@classmethod
+	def generate_key(cls, from_id, to_id):
+		return "journey_%s_%s" % (from_id, to_id)
+	
+  	@classmethod
+	def get(cls, from_id, to_id):
+		key = cls.generate_key(from_id, to_id)
+		return cls.get_by_key_name(key)
+	
 class HighScores(db.Model):
 	journey = db.ReferenceProperty()
 
