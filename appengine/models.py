@@ -41,7 +41,7 @@ class Journey(db.Model):
 		return cls.get_by_key_name(key)
 
 
- class UserJourney(db.Model):
+class UserJourney(db.Model):
  	journey = db.ReferenceProperty(Journey)
  	date = db.DateTimeProperty(auto_add_now=True)
  	completed_time = db.StringProperty()
