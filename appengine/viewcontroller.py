@@ -88,7 +88,7 @@ class ViewController(webapp.RequestHandler):
 	def _getUserDetails(self, user_id):
 		if not self.user_db:
 			try:
-	  			self.user_obj = models.User.get_by_key_name(user_id)
+				self.user_obj = models.User.get_by_key_name(user_id)
 				return self.user_obj
 			except Exception, e:
 				logging.info(e)
@@ -98,15 +98,18 @@ class ViewController(webapp.RequestHandler):
 			return None
 
 
-	def _checkAuthStatus(self):
+	def isAuthenticated(self):
 		self.auth = False
 		oauth_token = self.request.cookies.get('oauth_token')
 		if oauth_token is not None:
 			token = models.OAuthAccessToken.get_by_key_name(oauth_token)
-    		if token is not None:
+			if token is not None:
 				self.auth = True
+				return True
+			else:
+				return False
+		return False
 		
-		return
 
 	@staticmethod
 	def to_dict(model, skipModels=False):

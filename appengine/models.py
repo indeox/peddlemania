@@ -27,9 +27,9 @@ class Journey(db.Model):
 	from_id = db.IntegerProperty()
 	to_id = db.IntegerProperty()
 	distance = db.FloatProperty()
-	fastest_user = db.ReferenceProperty(User)
+	#fastest_user = db.ReferenceProperty(User)
 	num_of_journeys = db.IntegerProperty(default=0)
-	highest_scoring_user = db.ReferenceProperty(User)
+	#highest_scoring_user = db.ReferenceProperty(User)
 	
 	@classmethod
 	def generate_key(cls, from_id, to_id):
