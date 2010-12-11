@@ -65,17 +65,14 @@ class ViewController(webapp.RequestHandler):
         
     template_path = template_name + suffix
     
-    #if self.user_id:
-    #  user_obj = self._getUserDetails(self.user_id)
-    #  values.update({ 'USER': user_obj })
-      
-    client = OAuthClient('twitter', self)
-    oauth_token = client.get_cookie()
-    if oauth_token:
-      oauth_token_db = models.OAuthAccessToken.get_by_key_name(oauth_token)  
-      if oauth_token_db:
-        values.update({ 'VERIFIEDUSER': self._getUserDetails(oauth_token_db.specifier) })
-
+    
+    oauth_token = self.request.cookies.get('oauth_token')
+    if oauth_token is not None:
+		token = models.OAuthAccessToken.get_by_key_name(oauth_token)
+		if token and token.oauth_token == oauth_token:
+			values.update({ 'VERIFIEDUSER': self._getUserDetails(token.user_id) })
+	
+	
     output = ''
     if output_format == 'json':
       self.response.headers['Content-Type'] = 'text/json'
@@ -94,7 +91,7 @@ class ViewController(webapp.RequestHandler):
   def _getUserDetails(self, user_id):
     if not self.user_db:
       try:
-        #self.user_obj = tweetmarkruser.UserController(user_id=user_id)
+        self.user_obj = models.User.get_by_key_name(user_id)
         return self.user_obj
       except Exception, e:
         logging.info(e)
