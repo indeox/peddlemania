@@ -135,6 +135,51 @@ class CompleteAuthorisationHandler(ViewController):
 		
 
 
+##### challenge handlers....
+
+class ChallengeSelectHandler(ViewController):
+	def get(self):
+		
+		pass
+	def post(self):
+		self.get()
+
+
+
+class ChallengeHandler(ViewController):
+	def get(self):
+		
+		pass
+	def post(self):
+	
+		from_id = self.request.get("from_id")
+		to_id = self.request.get("to_id")
+		distance = self.request.get("distance")
+		user_details = self.getUserDetails()
+		
+		journey = models.Journey.get(from_id, to_id)
+		
+		if journey is None:
+			j_key = models.Journey.generate_key(from_id, to_id)
+			journey = models.Journey.create(key_name=j_key, distance=distance)
+		
+		logging.info(journey)
+
+		q = models.UserJourney.gql("WHERE  ANCESTOR IS :parent", parent=journey.Key())
+		user_journey = q.get()
+		logging.info(user_journey)
+		
+		if user_journey is None:
+			user_journey = models.UserJourney.create(parent=user_details, journey=journey)
+		
+		logging.info(user_journey)
+			
+		return
+		
+		
+
+
+
 def main():
 
 	application = webapp.WSGIApplication([
@@ -146,6 +191,13 @@ def main():
 										('/u/authorise', AuthoriseUserHandler),
 										('/u/authorise/complete', AuthoriseUserCompleteHandler),
 										('/u/(.*)', UserHandler),
+										
+										
+										## all about the challenges.
+										('/challenge',  ChallengeSelectHandler), 
+										
+										('/challenge/start',  ChallengeHandler), 
+										('/u/new', NewUserHandler), 
 										],
 										 debug=True)
 	util.run_wsgi_app(application)
