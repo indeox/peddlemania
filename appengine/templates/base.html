@@ -1,0 +1,502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{% block title %}{% if headline %}{{ headline }} - TweetMarkr{% else %}TweetMarkr{% endif %}{% endblock %}</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/scripts/jquery.prettydate.js"></script>   
+    <script type="text/javascript" src="/static/scripts/jquery.jcorners.js"></script>
+    <script type="text/javascript" src="/static/scripts/jquery.highlight.js"></script>
+    <script type="text/javascript" src="/static/scripts/jquery.texttools.js"></script>
+	<script type="text/javascript">
+		// Ensure all iFrames are working in a common domain
+		document.domain = "tweetmarkr.com";
+	</script>
+    {% block js %}{% endblock %}
+    
+    <script type="text/javascript">
+    <!--
+
+    	function linkNetwork(hashtag) {
+    	
+    	}
+    
+		$(document).ready(
+			function(){
+				$("p").prettyDate();
+				$("span").prettyDate();
+				$('.tweet-text blockquote').link();
+				//(#(?:r(?:adio)?[1-7])|bbcws|ws|asiannetwork|5live|fivelive|6music|1xtra|r1xtra|r4lw)
+				$('.tweet-text blockquote').highlight(/(#(?:[\w\d]+))/gi, 'hashtag');
+			}
+		);
+
+    //-->
+    </script>
+
+	<style type="text/css">
+	<!--
+	/* reset */
+	html, body, div, span, applet, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, font, img, ins, kbd, q, s, samp,
+	small, strike, strong, sub, sup, tt, var,
+	b, u, i, center,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		outline: 0;
+		font-size: 100%;
+		vertical-align: baseline;
+		background: transparent;
+		font-family:Georgia,"Times New Roman",serif;
+	}
+	body {
+		line-height: 1;
+	}
+	ol, ul {
+		list-style: none;
+	}
+	blockquote, q {
+		quotes: none;
+	}
+	blockquote:before, blockquote:after,
+	q:before, q:after {
+		content: '';
+		content: none;
+	}
+	
+	/* remember to define focus styles! */
+	:focus {
+		outline: 0;
+	}
+	
+	/* remember to highlight inserts somehow! */
+	ins {
+		text-decoration: none;
+	}
+	del {
+		text-decoration: line-through;
+	}
+	
+	/* tables still need 'cellspacing="0"' in the markup */
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+	/* reset end */
+	/* general framework */
+	
+	
+	a {
+		color:#555555;
+		text-decoration:none;
+		border-color: #c0c0c0;
+		border-bottom-width: 1px;
+		border-left-width: 0em;
+		border-right-width: 0em;
+		border-top-width: 0em;
+		border-style: dotted;
+	}
+	
+	a:hover {
+		border-color: #000;
+		border-bottom-width: 1px;
+		border-left-width: 0em;
+		border-right-width: 0em;
+		border-top-width: 0em;
+		border-style: solid;
+		color:#000000;
+	}
+	
+	#header {
+		height:80px;
+		padding-top:35px;
+		position:relative;
+	}
+	#menu {
+		display:inline-block;
+		/*padding:0 0 0 0;*/
+		padding:1.5em 1.5em 0 0;
+		white-space:nowrap;
+		float: right;
+		max-width:550px;
+		font-size:1em;
+		background-color: #fff;
+	}
+	#header-search {
+		position:relative;
+	}
+	#menu ul {
+		list-style: none;
+		list-style-image:none;
+		list-style-position:outside;
+		list-style-type:none;
+	}
+	#menu ul li {
+		float:left;
+		padding-right: 0.8em;
+		padding-left: 0.4em;
+	}
+
+	#menu ul li a {
+		display:block;
+	}
+	
+	/*#menu ul li a:hover {
+		border-color: #000;
+		border-bottom-width: 1px;
+		border-left-width: 0em;
+		border-right-width: 0em;
+		border-top-width: 0em;
+		border-style: solid;
+		color:#000000;
+	}*/
+	
+	#content {
+		position:relative;
+		float:left;
+		width:600px;
+		padding-bottom: 4em;
+	}
+	#content h1 {
+		margin-bottom:1.8em;
+		font-size: 1.7em;
+	}
+	
+	/* top logo */
+	.logo {
+		float:left;
+		position:relative;
+		width:200px;
+		height:120px;
+	}
+	
+	.logo a {
+		background-position:left -147px;
+		left:-25px;
+		position:absolute;
+		width:69px;
+		background:transparent url(/static/images/smalltwitter.png) no-repeat scroll left top;
+		display:block;
+		height:64px;
+		left:-25px;
+		overflow:hidden;
+		position:relative;
+		text-indent:-2000em;
+	}
+	
+	/* tweetmark listings */
+	.entry {
+		margin-bottom:100px;
+		padding:20px 30px 33px;
+		position:relative;
+	}
+	.network-logo {
+		color:#000000;
+		display:block;
+		padding-top:0.5em;
+		position:absolute;
+		left:-0.5em;
+		text-align:right;
+		text-decoration:none;
+		top:-1em;
+	}
+	#container {
+		position: relative;
+		margin:0 auto;
+		width:700px;
+	}
+	
+	.bookmark {
+		background:#E9EEFD;
+		margin-bottom:80px;
+		padding:2em 0 1em 1em;
+		position:relative;
+	}
+	.view-bookmark {
+		margin-top:0.5em;
+		position:absolute;
+		background:#F4F4EF;
+		color:#4B4B4A;
+		padding:0.5em 0.5em 0.5em 0.5em;
+		left: 1.7em;
+	}
+	.view-bookmark a {
+		text-decoration:none;
+	}
+
+	.tweet-date {
+		font-size: 0.8em;
+	}
+	
+	.tweet-time {
+		font-size: 1em;
+		color:#335588;
+	}
+
+	.programme-title {
+		font-size: 1.6em;
+	}
+	
+	.episode-text {
+		margin: 0.5em;
+	}
+	
+	#episode-details {
+		margin: 1em 0;
+	}
+	
+	.synopsis {
+		font-size: 1.15em;
+		padding:1em 0.5em 0 0.3em;
+	}
+
+	/* Home page */
+	/* user search */
+	#home { 
+		min-width: 700px;
+		background-color: #FFFFFF;
+	}
+	
+	#home-search {
+		/*position: relative;
+		right: 0;
+		top: 0;
+		width: 260px;*/
+
+		/*width: 100%;*/
+	}
+	
+	#home-search p {
+		padding: 1em 1em 1em 1em;
+	}
+	
+	#home-search input#user-query {
+		font-size: 1.2em;
+		width: 450px;
+		height: 26px;
+		margin:0 0 0 0.6em;
+		padding:0.4em 0.4em 0.1em;
+		border: none;
+		background-color: #D2E8FD;
+	}
+	
+	#home-search input#home-search-submit {
+		position: relative;
+		width: 35px;
+		height: 36px;
+		right: 4px;
+		top: -4px;
+		text-indent: -2000em;
+		overflow: hidden;
+		cursor: pointer;
+		border: none;
+		background: transparent url(/static/images/header-search-submit.png) left top no-repeat;
+	}
+	#home-search input#home-search-submit:hover {
+		background-position: left -36px;
+	}
+
+	/* home page */
+	#home-dashboard {
+		margin-bottom: 3em;
+		display: inline-block;
+	}
+	#home-dashboard ul {
+		list-style: none;
+		list-style-image:none;
+		list-style-position:outside;
+		list-style-type:none;
+	}
+	#home-dashboard ul li {
+		font-size: 1.4em;
+		float:left;
+		padding-right: 0.8em;
+		padding-left: 0.6em;
+		padding-top: 0.3em;
+	}
+
+	#home-dashboard ul li a {
+		/*display:block;*/
+	}
+	
+	#home-dashboard h2 {
+		padding-bottom: 0.3em;
+		padding-top: 0.7em;
+		font-size: 2em;
+		float: left;
+		width: 100%;
+	}
+	
+
+	/* footer */
+	
+	div#footer {
+		border-width:1px 0 0;
+		padding:2em 0 2em 0;
+		border-color:#444444;
+		clear:both;
+	}
+
+	div#footer ul {
+		float:left;
+		display:block;
+		padding-left:0;
+	}
+	
+	div#footer ul li:first-child {
+		border-width:0;
+	}
+	body div#footer, div#footer ul li {
+		border-style:solid;
+	}
+	div#footer ul li {
+		border-width:0 0 0 1px;
+		border-color:#888888;
+		display:inline;
+		list-style-type:none;
+		padding:0 0.5em;
+	}
+
+
+	/* big quotes - thanks 24ways */	
+		
+	blockquote {
+		font-size:120%;
+		font-style:normal;
+		line-height:150%;
+		margin:15px;
+		padding:0;
+	}
+	blockquote {
+		background:rgba(255, 255, 255, 0.75) none repeat scroll 0 0;
+		margin-bottom:1em;
+		/*padding:1.5em 1.4em 1.5em 1.6em;*/
+		padding:1.3em 1em;
+	}
+
+	.bqstart {
+		 float: left;
+		 height: 45px;
+		 margin-top: -20px;
+		 padding-top: 45px;
+		 margin-bottom: -50px;
+		 font-size: 700%;
+		 color: #FF0000;
+	 }
+	
+	 .bqend {
+		 float: right;
+		 height: 25px;
+		 margin-top: 0px;
+		 padding-top: 15px;
+		 font-size: 700%;
+		 color: #FF0000;
+	 }
+	 
+	 
+	 /* find/search */
+	 #episode-results {
+	 	margin-bottom: 2em;
+	 }
+	 
+	 #episode-results ol {
+	 	list-style-type: disc;
+		list-style-position: outside;
+	 }
+	 
+	 #episode-results ol li {
+		padding-right: 0.8em;
+		padding-left: 0.4em;
+	 }
+	 
+	 
+	 #bookmark-results {
+		 margin-bottom: 2em;
+	 }
+	 
+	 #bookmark-results ol {
+	 	list-style-type: disc;
+		list-style-position: outside;
+	 }
+	 
+	 #bookmark-results ol li {
+		padding-right: 0.8em;
+		padding-left: 0.4em;
+	 }
+	-->
+	</style>
+</head>
+
+<body>
+
+<div id="container">
+	<div id="header">
+		<div class="logo">
+			<a href="/">TweetMarkr</a>
+		</div>
+		<div id="menu">
+			{% block sidebar %}
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/find">Find</a></li>
+				<li><a href="/login">Login (with Twitter)</a></li>
+			</ul>
+			{% endblock %}
+		</div>
+		 <!--<div id="header-search">
+		  <form method="get" id="header-search-form" action="http://www.tweetmarkr.com/search">
+			<input value="" name="query" id="query" type="text" />
+			<input id="header-search-submit" value="Search" type="submit" />
+		  </form>
+		</div>-->
+	</div>
+	<div id="content">
+		{% block h1 %}{% if headline %}<h1>{{ headline }}</h1>{% endif %}{% endblock %}
+		{% block content %}{% endblock %}    
+	</div>
+	<div id="footer">
+	<!-- footer start -->
+			<ul>
+				<li><a href="/about">About</a></li>
+				<li><a href="/contact">Contact</a></li>
+				<li>This site is in no way endorsed by the BBC - by <a href="http://tom.leit.ch">Tom Leitch</a></li>
+			</ul>
+	<!-- footer end -->
+	</div>
+</div>
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-12318918-1");
+	pageTracker._trackPageview();
+	} catch(err) {}</script>
+</body>
+</html>
+
+<!--
+
+    <div id="user">
+        {% block user %}
+        {% if user %}
+        <span>
+	        <h3>{{ user.user_db.user_id }}</h3>
+	        <span class="image">{% if user.user_db.image %}<img src="{{ user.user_db.image }}" alt="{{ user.user_db.user_id}} - {{ user.user_db.name }}" />{% endif %}</span>
+	        <span class="last-tweet">Last TweetMarkr: <strong>{{ user.lastTweetDatePretty }}</strong> ago</span>
+        </span>
+        <ul>
+            <li><a href="/user/{{ user.user_db.user_id }}/bookmarks/list">List {{ user.user_db.user_id }}'s bookmarks</a></li>
+        </ul>
+        {% endif %}
+        {% endblock %}
+    </div>
+-->

@@ -1,0 +1,12 @@
+{% extends "../base.html" %}
+
+{% block content %}
+{% if message %}<span class="error">{{ message }}</span>{% endif %}
+
+{% if not auth %}
+<a href="/oauth/twitter/login">Login via Twitter</a>
+{% else %}
+user authorised 
+{% endif %}
+
+{% endblock %}
