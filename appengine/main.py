@@ -160,7 +160,12 @@ class ChallengeCompleteHandler(ViewController):
 		
 		if user_details is None:
 			return self.error('No user found')
-			
+		
+		if score is None or score == '':
+			return self.error('Unable to calculate score')
+		else:
+			score = int(score)
+		
 		journey = models.Journey.get(from_id, to_id)
 		
 		if journey is None:
@@ -172,7 +177,7 @@ class ChallengeCompleteHandler(ViewController):
 		if user_journey is None:
 			return self.error('Your journey was not found, or has been completed already')
 			
-		user_journey.incomplete = False
+		#user_journey.incomplete = False
 		start_end_diff = datetime.now() - user_journey.date
 		user_journey.completed_time = unicode(start_end_diff)
 		user_journey.score = score
@@ -181,9 +186,24 @@ class ChallengeCompleteHandler(ViewController):
 		user_details.total_score += score
 		user_details.put()
 		
+		
+		fastest_user = False
+		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2", journey.fastest_user, journey)
+		fastest_user_journey = q.get()
+		if fastest_user_journey:
+			fastest_time =  datetime.strptime(fastest_user_journey.completed_time, '%H:%M:%S.')
+			logging.info(fastest_time)
+			logging.info(fastest_time - start_end_diff)
+			#if current_fastest < journey_time -- fastest_user = True
+		else:
+			journey.fastest_user = user_details
+			fastest_user = True
+			logging.info('Fastest user!')
+		
 		journey.num_of_journeys += 1
 		journey.put()
-			
+		
+		
 		logging.info('finished')
 		return self.output('challenge_complete', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
 
