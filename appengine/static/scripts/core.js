@@ -22,6 +22,7 @@ $(document).ready(function() {
 			      + '</li>';            
         });
         html += '</ul>';
+        console.log(html);
         $('#challenges [data-role="content"]').html(html);
         $('#challenges ul').listview();
     };
@@ -35,7 +36,7 @@ $(document).ready(function() {
 
 
     $('#challenges').live('pageshow',function(event, ui){
-      alert('This page was just hidden: '+ ui.prevPage);
+      //alert('This page was just hidden: '+ ui.prevPage);
     });
     
 });
