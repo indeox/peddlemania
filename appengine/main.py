@@ -22,6 +22,8 @@ import oauth
 
 import models
 import logging
+from datetime import tzinfo, timedelta, datetime, date
+
 from viewcontroller import ViewController
 
 OAUTH_APP_SETTINGS = {
@@ -146,6 +148,41 @@ class ChallengeSelectHandler(ViewController):
 
 
 
+class ChallengeCompleteHandler(ViewController):
+	def get(self):
+		self.post()  #make sure to change this.
+	def post(self):
+		from_id = self.request.get("from_id")
+		to_id = self.request.get("to_id")
+		user_details = self.getUserDetails()
+		
+		
+		if user_details is None:
+			return self.error('No user found')
+			
+		journey = models.Journey.get(from_id, to_id)
+		
+		if journey is None:
+			return self.error('This journey was not found')
+		
+		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2 AND incomplete = True", user_details, journey)
+		user_journey = q.get()
+
+		if user_journey is None:
+			return self.error('Your journey was not found, or has been completed already')
+			
+		user_journey.incomplete = False
+		logging.info(user_journey.date)
+		logging.info(datetime.now())
+		start_end_diff = datetime.now() - user_journey.date
+		logging.info(type(start_end_diff))
+		user_journey.completed_time = unicode(start_end_diff)
+		user_journey.put()
+		#score = 
+			
+		logging.info('finished')
+
+
 class ChallengeHandler(ViewController):
 	def get(self):
 		
@@ -155,6 +192,7 @@ class ChallengeHandler(ViewController):
 		from_id = self.request.get("from_id")
 		to_id = self.request.get("to_id")
 		distance = self.request.get("distance")
+		fullness_score = self.request.get("fullness_score")
 		user_details = self.getUserDetails()
 		
 		logging.info(user_details)
@@ -180,11 +218,11 @@ class ChallengeHandler(ViewController):
 		user_journey = q.get()
 
 		if user_journey is None:
-			user_journey = models.UserJourney(user=user_details, journey=journey)
+			user_journey = models.UserJourney(user=user_details, journey=journey, fullness_score=fullness_score)
 			user_journey.put()
 		
 			
-		return
+		return 
 		
 		
 
@@ -207,6 +245,7 @@ def main():
 										('/challenge',  ChallengeSelectHandler), 
 										
 										('/challenge/start',  ChallengeHandler), 
+										('/challenge/complete',  ChallengeCompleteHandler), 
 										('/u/new', NewUserHandler), 
 										],
 										 debug=True)
