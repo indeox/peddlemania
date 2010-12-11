@@ -15,23 +15,29 @@ import string
 	
 
 class User(db.Model):
-  user_id = db.StringProperty()
-  name = db.TextProperty()
-  user_timeline = db.StringProperty()
-  image = db.StringProperty()
-  lang = db.StringProperty()
-  
+	user_id = db.StringProperty()
+	name = db.TextProperty()
+	image = db.StringProperty()
+  	total_score = db.IntegerProperty(default=0)
+  	journeys = db.ListProperty()
   
 
-class UsersOnPhone(db.Model):
-	uuid = db.StringProperty()
-	user = db.ReferenceProperty(User)
-	oauth_id = db.StringProperty(required=False)
+class Journey(db.Model):
+	from_id = db.IntegerProperty()
+	to_id = db.IntegerProperty()
+	distance = db.FloatProperty()
+	fastest_user = db.ReferenceProperty(User)
+	num_of_journeys = db.IntegerProperty(default=0)
+	highest_scoring_user = db.ReferenceProperty(User)
+	
+class HighScores(db.Model):
+	journey = db.ReferenceProperty()
+
 
 class HiScore(db.Model):
-  user_id = db.ReferenceProperty(User)
-  score = db.IntegerProperty(default=0)
-  last_score = db.DateTimeProperty(auto_now_add=False)
+	user_id = db.ReferenceProperty(User)
+	score = db.IntegerProperty(default=0)
+	last_score = db.DateTimeProperty(auto_now_add=False)
 
 
 class OAuthAccessToken(db.Model):
