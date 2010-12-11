@@ -42,7 +42,7 @@ from google.appengine.api.urlfetch import fetch as urlfetch, GET, POST
 from google.appengine.ext import db
 from google.appengine.ext.webapp import RequestHandler, WSGIApplication
 
-from models import OAuthAccessToken, OAuthRequestToken
+from models import OAuthAccessToken
 
 import logging
 
