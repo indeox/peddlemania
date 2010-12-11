@@ -66,11 +66,7 @@ class ViewController(webapp.RequestHandler):
 		template_path = template_name + suffix
 
 
-		oauth_token = self.request.cookies.get('oauth_token')
-		if oauth_token is not None:
-			token = models.OAuthAccessToken.get_by_key_name(oauth_token)
-			if token and token.oauth_token == oauth_token:
-				values.update({ 'VERIFIEDUSER': self.getUserDetails(token.user_id) })
+		values.update({ 'VERIFIEDUSER': self.getUserDetails() })
 	
 	
 		output = ''
@@ -85,17 +81,22 @@ class ViewController(webapp.RequestHandler):
 
 
 
-	def getUserDetails(self, user_id):
-		if not self.user_db:
-			try:
-				self.user_obj = models.User.get_by_key_name(user_id)
-				return self.user_obj
-			except Exception, e:
-				logging.info(e)
-				logging.info('Could not find user')
-				return None
-		else:
-			return None
+	def getUserDetails(self, oauth_token=None):
+		if oauth_token is None:
+			oauth_token = self.request.cookies.get('oauth_token')
+		
+		if oauth_token is not None:
+			token = models.OAuthAccessToken.get_by_key_name(oauth_token)
+			if token:
+				try:
+					self.user_obj = models.User.get_by_key_name(token.user_id)
+					return self.user_obj
+				except Exception, e:
+					logging.info(e)
+					logging.info('Could not find user')
+					return None
+		
+		return None
 
 
 	def isAuthenticated(self):

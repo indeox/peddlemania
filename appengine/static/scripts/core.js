@@ -1,14 +1,17 @@
 var pm = {
+    status: { position: {} },
     
-
-};
-
-$(document).ready(function() {
-    // Init    
-    pm.status = { position: {} };
+    init: function() {
+        // Find current location
+        geo.getPosition();    
+        setInterval(function() { geo.updatePosition(); }, 3000);
+                
+        navigator.geolocation.watchPosition(geo.updatePosition);    
     
+        $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
+    },
     
-    routing.updateBikeStatsFeedCallback = function() {
+    updateChallenges: function() {
         var challenges = routing.getChallenges(),
             thumbSize = '150x150';
                         
@@ -22,22 +25,13 @@ $(document).ready(function() {
 			      + '</li>';            
         });
         html += '</ul>';
+        console.log(html);
         $('#challenges [data-role="content"]').html(html);
-        $('#challenges ul').listview();
-    };
-    
-    
-    // Find current location
-    geo.getPosition();    
-    setInterval(function() { geo.updatePosition(); }, 3000);
-            
-    navigator.geolocation.watchPosition(geo.updatePosition);    
+        $('#challenges ul').listview();    
+    }
 
+};
 
-    $('#challenges').live('pageshow',function(event, ui){
-      alert('This page was just hidden: '+ ui.prevPage);
-    });
-    
-});
+$(document).ready(function() { pm.init(); });
 
 
