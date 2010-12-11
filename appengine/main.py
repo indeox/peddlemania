@@ -154,6 +154,7 @@ class ChallengeCompleteHandler(ViewController):
 	def post(self):
 		from_id = self.request.get("from_id")
 		to_id = self.request.get("to_id")
+		score = self.request.get("score")
 		user_details = self.getUserDetails()
 		
 		
@@ -172,15 +173,19 @@ class ChallengeCompleteHandler(ViewController):
 			return self.error('Your journey was not found, or has been completed already')
 			
 		user_journey.incomplete = False
-		logging.info(user_journey.date)
-		logging.info(datetime.now())
 		start_end_diff = datetime.now() - user_journey.date
-		logging.info(type(start_end_diff))
 		user_journey.completed_time = unicode(start_end_diff)
+		#user_journey.score = score
 		user_journey.put()
-		#score = 
+		
+		user_details.total_score += score
+		user_details.put()
+		
+		journey.num_of_journeys += 1
+		journey.put()
 			
 		logging.info('finished')
+		return self.output('challenge_complete', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
 
 
 class ChallengeHandler(ViewController):
@@ -221,8 +226,10 @@ class ChallengeHandler(ViewController):
 			user_journey = models.UserJourney(user=user_details, journey=journey, fullness_score=fullness_score)
 			user_journey.put()
 		
+		user_details.journeys.append(user_journey)
+		user_details.put()
 			
-		return 
+		return self.output('challenge', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
 		
 		
 
