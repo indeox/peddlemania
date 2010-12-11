@@ -8,7 +8,9 @@ var pm = {
                 
         navigator.geolocation.watchPosition(geo.updatePosition);    
     
-        $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
+        $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });
+        
+        $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });  
     },
     
     updateChallenges: function() {
@@ -28,6 +30,21 @@ var pm = {
         console.log(html);
         $('#challenges [data-role="content"]').html(html);
         $('#challenges ul').listview();    
+    },
+    
+    showMap: function() {
+    	alert("map");
+    	var latitude = (position.coords.latitude).toFixed(6);
+		var longitude = (position.coords.longitude).toFixed(6);
+		
+		var myOptions = 
+		{
+			center: new google.maps.LatLng(latitude,longitude),
+			zoom: 16,
+    		mapTypeId: google.maps.MapTypeId.HYBRID
+		};
+  		
+		var map = new google.maps.Map(document.getElementById("map"), myOptions);    	
     }
 
 };
