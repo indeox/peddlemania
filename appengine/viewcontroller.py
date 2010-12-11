@@ -70,7 +70,7 @@ class ViewController(webapp.RequestHandler):
 		if oauth_token is not None:
 			token = models.OAuthAccessToken.get_by_key_name(oauth_token)
 			if token and token.oauth_token == oauth_token:
-				values.update({ 'VERIFIEDUSER': self._getUserDetails(token.user_id) })
+				values.update({ 'VERIFIEDUSER': self.getUserDetails(token.user_id) })
 	
 	
 		output = ''
@@ -85,7 +85,7 @@ class ViewController(webapp.RequestHandler):
 
 
 
-	def _getUserDetails(self, user_id):
+	def getUserDetails(self, user_id):
 		if not self.user_db:
 			try:
 				self.user_obj = models.User.get_by_key_name(user_id)
