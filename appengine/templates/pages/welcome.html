@@ -1,6 +1,6 @@
 <div data-role="page" id="welcome">
 	<div data-role="header">
-		<h1>Pedalmania</h1>
+		<h1>PedalMania</h1>
 	</div>
 
 	<div data-role="content">	
@@ -8,11 +8,15 @@
 		<img src="{{user.image}}" />		
 		<p class="stats">
 			Your total score is <span>{{user.no_of_journeys}}</span> which you have collected
-			on {{user.no_of_journeys}}. You're currently ranked x of x peddlemaniacs.
+			on {{user.no_of_journeys}} journey/s.
+			You're currently ranked x of x PedalManiacs.
 		</p>
-		<a href="#challenges" data-role="button" data-theme="e">Start peddling!</a>
-		<a href="/highscores" data-role="button">View high scores</a>
-		<a href="/user/history" data-role="button">View old journeys</a>
+		<p>
+			You're currently ranked x of x PedalManiacs.
+		</p>
+		<a href="#challenges" data-role="button" data-theme="e">Get pedalling!</a>
+		<a href="/highscores" data-role="button">High scores</a>
+		<a href="/user/history" data-role="button">Previous journeys</a>
 	</div>
 
 	{% include "footer.html" %}
