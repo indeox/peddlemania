@@ -29,7 +29,6 @@ routing = {
 	},
 	
 	updateBikeStatsFeed: function(callback) {
-	    console.log('updating feed');
 		/* check to see if network is reachable */
 		var apiEndpoint = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%3D'http%3A%2F%2Fapi.bike-stats.co.uk%2Fservice%2Frest%2Fbikestats'&format=json&diagnostics=true&callback=?";
 		apiEndpoint = "/scripts/yahoo_response.json";
@@ -42,7 +41,6 @@ routing = {
 	},
 	
 	parseBikeStatsFeed: function (request) {
-	    console.log('parsing feed');
 		routing.data = request.query.results.dockStationList.dockStation;
 		if (this.updateBikeStatsFeedCallback) {
 			this.updateBikeStatsFeedCallback(request);
@@ -93,8 +91,7 @@ routing = {
 		var challenges = {
 		    easy: bikeArray[0],
 		    medium: bikeArray[Math.round(bikeArray.length / 2) ],
-		    hard: bikeArray[bikeArray.length-1]
-		
+		    hard: bikeArray[bikeArray.length-1]		
 		}
 		
 		return challenges;
@@ -131,7 +128,7 @@ var astar = {
 				if(openList[i].f < openList[lowInd].f) { lowInd = i; }
 			}
 			var currentNode = openList[lowInd];
-            console.log(currentNode);
+            //console.log(currentNode);
 			// End case -- result has been found, return the traced path
 			if(currentNode.ID == end.ID) {
 				var curr = currentNode;
