@@ -58,9 +58,12 @@ class UserHandler(ViewController):
 	pass
 
 
+
 class NewUserHandler(ViewController):
 	def post(self):
-		pass
+		return self.get()
+	def get(self):
+		self.output('user/new')
 
 
 class AuthoriseUserHandler(ViewController):
@@ -94,11 +97,10 @@ def main():
 										('/oauth/complete', CompleteAuthorisationHandler),
 
 										('/hiscores', HiScoreHandler),
-										('/u/(.*)', UserHandler),
 										('/u/new', NewUserHandler), 
 										('/us/authorise', AuthoriseUserHandler),
 										('/u/authorise/complete', AuthoriseUserCompleteHandler),
-										
+										('/u/(.*)', UserHandler),
 										],
 										 debug=True)
 	util.run_wsgi_app(application)
