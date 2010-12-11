@@ -31,8 +31,14 @@ class ViewController(webapp.RequestHandler):
 		self.auth = False
 		self.client_info = None
 		self.client_rate_info = None
-		self.user_db = None
 		self.user_id = None
+		self.user_obj = None
+		
+		#self.getUserDetails()
+		## eventually redirect user to log in page if they 
+		## haven't logged in already - do it automatically to remove
+		## the logic from each individual handler.
+		
 
 	def get(self, **kargs):
 		pass
@@ -42,6 +48,9 @@ class ViewController(webapp.RequestHandler):
   
 	def head(self, *args):
 		pass
+  
+  	def error(self, error_message):
+  		return self.output('error', { 'error': True, 'message': error_message})
   
 	def output(self, template_name, template_values={}, **kargs):
 	
@@ -82,9 +91,12 @@ class ViewController(webapp.RequestHandler):
 
 
 	def getUserDetails(self, oauth_token=None):
+		if self.user_obj is not None:
+			return self.user_obj
+
 		if oauth_token is None:
 			oauth_token = self.request.cookies.get('oauth_token')
-		
+
 		if oauth_token is not None:
 			token = models.OAuthAccessToken.get_by_key_name(oauth_token)
 			if token:

@@ -22,6 +22,8 @@ import oauth
 
 import models
 import logging
+from datetime import tzinfo, timedelta, datetime, date
+
 from viewcontroller import ViewController
 
 OAUTH_APP_SETTINGS = {
@@ -146,6 +148,46 @@ class ChallengeSelectHandler(ViewController):
 
 
 
+class ChallengeCompleteHandler(ViewController):
+	def get(self):
+		self.post()  #make sure to change this.
+	def post(self):
+		from_id = self.request.get("from_id")
+		to_id = self.request.get("to_id")
+		score = self.request.get("score")
+		user_details = self.getUserDetails()
+		
+		
+		if user_details is None:
+			return self.error('No user found')
+			
+		journey = models.Journey.get(from_id, to_id)
+		
+		if journey is None:
+			return self.error('This journey was not found')
+		
+		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2 AND incomplete = True", user_details, journey)
+		user_journey = q.get()
+
+		if user_journey is None:
+			return self.error('Your journey was not found, or has been completed already')
+			
+		user_journey.incomplete = False
+		start_end_diff = datetime.now() - user_journey.date
+		user_journey.completed_time = unicode(start_end_diff)
+		user_journey.score = score
+		user_journey.put()
+		
+		user_details.total_score += score
+		user_details.put()
+		
+		journey.num_of_journeys += 1
+		journey.put()
+			
+		logging.info('finished')
+		return self.output('challenge_complete', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
+
+
 class ChallengeHandler(ViewController):
 	def get(self):
 		
@@ -155,32 +197,39 @@ class ChallengeHandler(ViewController):
 		from_id = self.request.get("from_id")
 		to_id = self.request.get("to_id")
 		distance = self.request.get("distance")
+		fullness_score = self.request.get("fullness_score")
 		user_details = self.getUserDetails()
 		
 		logging.info(user_details)
 		
-		journey = models.Journey.get(from_id, to_id)
+		if user_details is None:
+			return self.error('No user found')
 		
+		journey = models.Journey.get(from_id, to_id)
+
 		if distance is None or distance <= 0 or distance == '':
-			logging.info('Distance must be a float')
-			return
+			return self.error('Distance must be a float')
+			
+		if (from_id is None or to_id is None) or (from_id == '' or to_id == ''):
+			return self.error('Must provide From and To locations')
 		
 		if journey is None:
 			j_key = models.Journey.generate_key(from_id, to_id)
+			logging.info('Journey key: %s' % j_key)
 			journey = models.Journey(key_name=j_key, distance=float(distance))
+			journey.put()
 		
-		logging.info(journey)
-
-		q = models.UserJourney.gql("WHERE  ANCESTOR IS :parent", parent=journey.key())
+		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2", user_details, journey)
 		user_journey = q.get()
-		logging.info(user_journey)
-		
+
 		if user_journey is None:
-			user_journey = models.UserJourney(parent=user_details, journey=journey)
+			user_journey = models.UserJourney(user=user_details, journey=journey, fullness_score=fullness_score)
+			user_journey.put()
 		
-		logging.info(user_journey)
+		user_details.journeys.append(user_journey)
+		user_details.put()
 			
-		return
+		return self.output('challenge', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
 		
 		
 
@@ -203,6 +252,7 @@ def main():
 										('/challenge',  ChallengeSelectHandler), 
 										
 										('/challenge/start',  ChallengeHandler), 
+										('/challenge/complete',  ChallengeCompleteHandler), 
 										('/u/new', NewUserHandler), 
 										],
 										 debug=True)
