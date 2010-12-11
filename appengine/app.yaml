@@ -1,4 +1,4 @@
-application: borrisbike
+application: peddle-mania
 version: 1
 runtime: python
 api_version: 1
