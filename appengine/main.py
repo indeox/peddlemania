@@ -149,7 +149,7 @@ class ChallengeSelectHandler(ViewController):
 class ChallengeHandler(ViewController):
 	def get(self):
 		
-		pass
+		return self.post() ## remove
 	def post(self):
 	
 		from_id = self.request.get("from_id")
@@ -157,20 +157,26 @@ class ChallengeHandler(ViewController):
 		distance = self.request.get("distance")
 		user_details = self.getUserDetails()
 		
+		logging.info(user_details)
+		
 		journey = models.Journey.get(from_id, to_id)
+		
+		if distance is None or distance <= 0 or distance == '':
+			logging.info('Distance must be a float')
+			return
 		
 		if journey is None:
 			j_key = models.Journey.generate_key(from_id, to_id)
-			journey = models.Journey.create(key_name=j_key, distance=distance)
+			journey = models.Journey(key_name=j_key, distance=float(distance))
 		
 		logging.info(journey)
 
-		q = models.UserJourney.gql("WHERE  ANCESTOR IS :parent", parent=journey.Key())
+		q = models.UserJourney.gql("WHERE  ANCESTOR IS :parent", parent=journey.key())
 		user_journey = q.get()
 		logging.info(user_journey)
 		
 		if user_journey is None:
-			user_journey = models.UserJourney.create(parent=user_details, journey=journey)
+			user_journey = models.UserJourney(parent=user_details, journey=journey)
 		
 		logging.info(user_journey)
 			
