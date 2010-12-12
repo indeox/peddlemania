@@ -2,17 +2,18 @@ geo = {
     firstRun: true,
     updatePosition: function(position) {
         //console.log('update position');
-        //pm.status.position.lat = position.coords.latitude;
-        //pm.status.position.lon = position.coords.longitude;        
-        pm.status.position.lat = 51.51333;
-        pm.status.position.lon =  -0.088947;        
+        //pm.status.position.lat = 51.51333;
+        //pm.status.position.lon =  -0.088947;        
+        pm.status.position.lat = position.coords.latitude;
+        pm.status.position.lon = position.coords.longitude;        
 
-        pm.status.destination = {};
-        pm.status.destination.lat = 51.51333;
-        pm.status.destination.lon = -0.088947;        
 
-        pm.status.destinationDistance = geo.getDistance(pm.status.position.lat, pm.status.position.lon, pm.status.destination.lat, pm.status.destination.lon);
-     	pm.status.destinationBearing = geo.getBearing(pm.status.position.lat, pm.status.position.lon, pm.status.destination.lat, pm.status.destination.lon);
+        //pm.status.destination = {};
+        //pm.status.destination.lat = 51.51333;
+        //pm.status.destination.lon = -0.088947;        
+
+        //pm.status.destinationDistance = geo.getDistance(pm.status.position.lat, pm.status.position.lon, pm.status.destination.lat, pm.status.destination.lon);
+     	//pm.status.destinationBearing = geo.getBearing(pm.status.position.lat, pm.status.position.lon, pm.status.destination.lat, pm.status.destination.lon);
 
 	    //$('distance').innerHTML = distance;
   	    //$('bearing').innerHTML = bearing;		
