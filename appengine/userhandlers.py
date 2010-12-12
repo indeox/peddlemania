@@ -46,9 +46,9 @@ class AuthoriseUserCompleteHandler(ViewController):
 			raise Exception("No Twitter access - could not verify token")
 		
 		
-		user = models.User.get_by_key_name(token.user_id)
-	
-		return self.output('user/authorise_complete', {'user': user, 'token': token})
+		#user = models.User.get_by_key_name(token.user_id)
+		#return self.output('user/authorise_complete', {'user': user, 'token': token})
+		self.redirect('/')
 	def post(self):
 		return self.get()
 
