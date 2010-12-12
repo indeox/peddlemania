@@ -75,7 +75,10 @@ routing = {
 			bikeNode.g = 0;
 			bikeNode.f = 0;
 			bikeArray.push(bikeNode);
+			
+    		pm.data.docks[bikeNode.ID] = bikeNode;
 		}
+	
 		
 		bikeArray.sort(function(a,b) {
 										if (a.score > b.score) {
@@ -89,9 +92,12 @@ routing = {
 		);
 		
 		var challenges = {
-		    easy: bikeArray[0],
-		    medium: bikeArray[Math.round(bikeArray.length / 2) ],
-		    hard: bikeArray[bikeArray.length-1]		
+		    start: bikeArray[0],
+		    destinations: {
+                easy: bikeArray[Math.round(bikeArray.length * 0.5) ],
+                medium: bikeArray[Math.round(bikeArray.length * 0.75) ],
+                hard: bikeArray[bikeArray.length-1]				    
+		    }
 		}
 		
 		return challenges;
