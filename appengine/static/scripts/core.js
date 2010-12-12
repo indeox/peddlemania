@@ -17,8 +17,7 @@ var pm = {
         });    
         
         $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });  
-        
-        
+                
         $('#challenge-finished').live('pageshow',function(event, ui) { pm.finishChallenge(); });
         
         routing.updateBikeStatsFeedCallback = pm.updateChallenges;
