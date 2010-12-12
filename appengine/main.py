@@ -31,13 +31,23 @@ from challengehandlers import ChallengeSelectHandler, ChallengeHandler, Challeng
 from userhandlers import CompleteAuthorisationHandler, NewUserHandler, AuthoriseUserHandler, AuthoriseUserCompleteHandler, UserHandler, NewUserHandler
 
 
+
 class MainHandler(ViewController):
 	def get(self):
 	
-		#if (self.isAuthenticated()):
-		return self.output('home')
-		#else:
-		#	return self.redirect('/u/new')
+		if (self.isAuthenticated()):
+			
+			user_details = self.getUserDetails()
+			no_of_journeys = len(user_details.journeys)
+			last_journey = user_details.journeys[-1]
+			logging.info(last_journey)
+		
+			return self.output('home', {
+														'no_of_journeys': no_of_journeys,
+														'user': user_details
+													})
+		else:
+			return self.redirect('/u/new')
 	def post(self):
 		self.get()
 
@@ -71,9 +81,35 @@ class PopulateHandler(ViewController):
 				place = models.Place.get_or_insert(key_name=id, name=name, lat=float(station['latitude']), long=float(station['longitude']))
 				#place = models.Place.create(station['ID'], name=name, lat=float(station['latitude']), long=float(station['longitude']))
 				place.put()
-				
-				#logging.info(models.Place.get(station['ID']))
-				#logging.info(models.Place.get_by_key_name()))
+
+
+
+class UserHiScoreHandler(ViewController):
+	def get(self):
+		pass
+	def post(self):
+		pass
+		
+class PlaceHiScoreHandler(ViewController):
+	def get(self, place_id):
+		
+		place = models.Place.get(place_id)
+		
+		if not place:
+			return self.error('Unable to find that place')
+			
+		
+		
+	def post(self):
+		pass
+		
+class HiScoreHandler(ViewController):
+	def get(self):
+		pass
+	def post(self):
+		pass
+
+
 		
 
 def main():
@@ -94,10 +130,9 @@ def main():
 										('/challenge/start',  ChallengeHandler), 
 										('/challenge/complete',  ChallengeCompleteHandler), 
 										
-										
-										
-										('/hiscores/by/user', HiScoreHandler),
-										('/hiscores/by/location', HiScoreHandler),
+										## hi scores tables
+										('/hiscores/by/user', UserHiScoreHandler),
+										('/hiscores/by/place/(.*)', PlaceHiScoreHandler),
 										('/hiscores/by/score', HiScoreHandler),
 										
 										('/task/populate', PopulateHandler),
