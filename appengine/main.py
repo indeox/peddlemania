@@ -30,6 +30,7 @@ from viewcontroller import ViewController
 from challengehandlers import ChallengeSelectHandler, ChallengeHandler, ChallengeCompleteHandler
 from userhandlers import CompleteAuthorisationHandler, NewUserHandler, AuthoriseUserHandler, AuthoriseUserCompleteHandler, UserHandler, NewUserHandler
 
+from pager import PagerQuery
 
 
 class MainHandler(ViewController):
@@ -100,15 +101,11 @@ class PlaceHiScoreHandler(ViewController):
 		
 		if not place:
 			return self.error('Unable to find that place')
-			
+	
+		query = PagerQuery(models.User).order('-total_score')
+		prev, results, next = query.fetch(10, pagingKey)
+
 		
-		
-	def post(self):
-		pass
-		
-class HiScoreHandler(ViewController):
-	def get(self):
-		pass
 	def post(self):
 		pass
 
