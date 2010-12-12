@@ -66,7 +66,7 @@ var pm = {
     
     calculateScores: function(start, end, distance) {
     	var p1 = ((start.totalSlots - start.emptySlots)/start.totalSlots) * 100; // Start station fullness percentage
-    	var p2 = ((end.totalSlots - end.emptySlots)/end.totalSlots) * 100;;// End station fullness percentage	
+    	var p2 = ((end.totalSlots - end.emptySlots)/end.totalSlots) * 100;// End station fullness percentage	
     	var f = p1 - p2; // Fullness factor
     	var D = 10; // Distance factor
     	
