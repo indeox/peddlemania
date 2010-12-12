@@ -75,8 +75,8 @@ var pm = {
     showMap: function() {
         var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 24509});
         var map = new CM.Map('map', cloudmade);
-        var startPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
-        var endPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
+        var startPoint = new CM.LatLng(parseFloat(pm.status.challenge.start.latitude), parseFloat(pm.status.challenge.start.longitude));
+        var endPoint = new CM.LatLng(parseFloat(pm.status.challenge.destination.latitude), parseFloat(pm.status.challenge.destination.longitude));
         
         map.setCenter(startPoint, 16);
         
@@ -84,25 +84,31 @@ var pm = {
 
         var waypoints = [startPoint, endPoint];
         directions.loadFromWaypoints(waypoints);
+        
+        // Update header
+        $("#challenge-progress .to").html(pm.status.challenge.destination.name);
     },
     
     finishChallenge: function(event, ui) {
-    	console.log("test", event);
-    	console.log("test", ui);
+    	var start = pm.status.challenge.start;
+    	var end = pm.status.challenge.destination;
+    	var distance = Math.round(pm.status.challenge.destination.distance);
+    	
     	// Calculate score
-    	var score = pm.calculateScores();
+    	var score = pm.calculateScores(start, end, distance);
     	
     	// Post scores
     	var action = "challenge/complete";
     	var postData = {
-    		from_id: 1,
-    		to_id: 2,
-    		score: 10,
-    		render: json	
+    		from_id: start.ID,
+    		to_id: end.ID,
+    		score: score,
+    		render: "json"	
     	}
     	var node = $(this);
 
     	$.post(action, postData, function(data) {
+    		console.log("data", data);
     		// Update scores
     		
     		
@@ -111,8 +117,10 @@ var pm = {
     },
     
     calculateScores: function(start, end, distance) {
-    	var p1 = ((start.totalSlots - start.emptySlots)/start.totalSlots) * 100; // Start station fullness percentage
-    	var p2 = ((end.totalSlots - end.emptySlots)/end.totalSlots) * 100;// End station fullness percentage	
+    	var startTotal = start.bikesAvailable + start.emptySlots;
+    	var endTotal = end.bikesAvailable + end.emptySlots;
+    	var p1 = (startTotal - start.emptySlots)/startTotal; // Start station fullness
+    	var p2 = (endTotal - end.emptySlots)/endTotal;// End station fullness	
     	var f = p1 - p2; // Fullness factor
     	var D = 10; // Distance factor
     	
