@@ -10,7 +10,7 @@ var pm = {
     
         $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
         $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });
-        $('#challenge-finished').live('pageshow',function(event, ui) { pm.calculateScores(); });
+        $('#challenge-finished').live('pageshow',function(event, ui) { pm.finishChallenge(); });
         //$('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });
         
         routing.updateBikeStatsFeedCallback = pm.updateChallenges;

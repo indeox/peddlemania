@@ -6,13 +6,18 @@
 	</div>
 
 	<div data-role="content">
-		<div id="map" style="height:500px; width:500px;"></div>	
+		<div id="map" style="height:500px; width:100%;"></div>	
 	</div>
 </div>
 
-<div data-role="page" id="challenge-cancel">
-	<div data-role="content">
+<div data-role="dialog" id="challenge-cancel">
+	<div data-role="header">
 		<h1>Cancel challenge?</h1>
-		<a href="#challenge-finish" data-icon="check" data-theme="e">Finish challenge</a>	
+	</div>
+	<div data-role="content">
+		<div data-role="controlgroup" data-type="horizontal">
+			<a href="#challenge-finish" data-role="button">Yes</a>
+			<a href="#challenge-progess" data-role="button">No</a>
+		</div>	
 	</div>	
 </div>
