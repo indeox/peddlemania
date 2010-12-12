@@ -50,19 +50,18 @@ var pm = {
     },
     
     showMap: function() {
-    	alert("map");
-    	var latitude = (position.coords.latitude).toFixed(6);
-		var longitude = (position.coords.longitude).toFixed(6);
-		
-		var myOptions = 
-		{
-			center: new google.maps.LatLng(latitude,longitude),
-			zoom: 16,
-    		mapTypeId: google.maps.MapTypeId.HYBRID
-		};
-  		
-		var map = new google.maps.Map(document.getElementById("map"), myOptions);    	
+    	
+        var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 8909});
+        var map = new CM.Map('map', cloudmade);
+        var startPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
+        var endPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
+        
+        map.setCenter(startPoint, 16);
+        
+        var directions = new CM.Directions(map, 'panel', 'c8a3643e0bb842b4a4491d0b96754cff');
 
+        var waypoints = [startPoint, endPoint];
+        directions.loadFromWaypoints(waypoints);
     }
 
 };
