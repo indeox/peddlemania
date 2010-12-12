@@ -23,6 +23,7 @@ import oauth
 import models
 import logging
 from datetime import tzinfo, timedelta, datetime, date
+import re
 
 from viewcontroller import ViewController
 
@@ -177,9 +178,14 @@ class ChallengeCompleteHandler(ViewController):
 		if user_journey is None:
 			return self.error('Your journey was not found, or has been completed already')
 			
+		start_end_diff = datetime.now() - user_journey.date	
+		## convert journey time to seconds..
+		m = re.match(r'(\d{1,3}):([0-5]\d):([0-5]\d)\.\d*$', str(start_end_diff))
+		journey_seconds = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
+			
+			
 		#user_journey.incomplete = False
-		start_end_diff = datetime.now() - user_journey.date
-		user_journey.completed_time = unicode(start_end_diff)
+		user_journey.completed_time = int(journey_seconds)
 		user_journey.score = score
 		user_journey.put()
 		
@@ -187,25 +193,44 @@ class ChallengeCompleteHandler(ViewController):
 		user_details.put()
 		
 		
+		### work out if this user journey is the fastest time of them all
 		fastest_user = False
-		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2", journey.fastest_user, journey)
+		q = models.UserJourney.gql("WHERE journey = :1 ORDER BY completed_time DESC", journey)
 		fastest_user_journey = q.get()
+		logging.info(fastest_user_journey.completed_time)
 		if fastest_user_journey:
-			fastest_time =  datetime.strptime(fastest_user_journey.completed_time, '%H:%M:%S.')
-			logging.info(fastest_time)
-			logging.info(fastest_time - start_end_diff)
-			#if current_fastest < journey_time -- fastest_user = True
+		
+			m = re.match(r'(\d{1,3}):([0-5]\d):([0-5]\d)\.\d*$', fastest_user_journey.completed_time)
+			current_record_seconds = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
+
+			if journey_seconds > current_record_seconds:
+				fastest_user = True
+				journey.fastest_user = user_details
 		else:
 			journey.fastest_user = user_details
 			fastest_user = True
-			logging.info('Fastest user!')
+			
+			
+		#### work out if this user journey is the highest scoring of them all
+		highest_scoring_user = False
+		q = models.UserJourney.gql("WHERE journey = :1 ORDER BY score DESC", journey)
+		highest_scoring_user_journey = q.get()
+		if highest_scoring_user_journey:
+
+			if score > highest_scoring_user_journey.score:
+				highest_scoring_user = True
+				journey.highest_score = user_details
+		else:
+			journey.highest_score = user_details
+			highest_scoring_user = True
+			
 		
 		journey.num_of_journeys += 1
 		journey.put()
 		
 		
 		logging.info('finished')
-		return self.output('challenge_complete', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
+		return self.output('challenge_complete', {'user_journey': user_journey, 'journey': journey, 'user': user_details, 'fastest_user': fastest_user, 'highest_scoring_user': highest_scoring_user})
 
 
 class ChallengeHandler(ViewController):
@@ -226,6 +251,9 @@ class ChallengeHandler(ViewController):
 			return self.error('No user found')
 		
 		journey = models.Journey.get(from_id, to_id)
+		
+		if fullness_score is None or fullness_score <= 0 or fullness_score == '':
+			fullness_score = 0
 
 		if distance is None or distance <= 0 or distance == '':
 			return self.error('Distance must be a float')
@@ -246,7 +274,7 @@ class ChallengeHandler(ViewController):
 			user_journey = models.UserJourney(user=user_details, journey=journey, fullness_score=fullness_score)
 			user_journey.put()
 		
-		user_details.journeys.append(user_journey)
+		user_details.journeys.append(user_journey.key())
 		user_details.put()
 			
 		return self.output('challenge', {'user_journey': user_journey, 'journey': journey, 'user': user_details})

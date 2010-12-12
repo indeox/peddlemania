@@ -45,7 +45,7 @@ class UserJourney(db.Model):
  	journey = db.ReferenceProperty(Journey)
  	user = db.ReferenceProperty(User)
  	date = db.DateTimeProperty(auto_now_add=True)
- 	completed_time = db.StringProperty()
+ 	completed_time = db.IntegerProperty()
  	fullness_score = db.IntegerProperty(default=0)
  	incomplete = db.BooleanProperty(default=True)
  	score = db.IntegerProperty(default=0)
