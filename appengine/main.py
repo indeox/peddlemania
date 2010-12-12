@@ -96,7 +96,9 @@ def main():
 										
 										
 										
-										('/hiscores', HiScoreHandler),
+										('/hiscores/by/user', HiScoreHandler),
+										('/hiscores/by/location', HiScoreHandler),
+										('/hiscores/by/score', HiScoreHandler),
 										
 										('/task/populate', PopulateHandler),
 										],
