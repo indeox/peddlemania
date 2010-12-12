@@ -10,8 +10,7 @@ var pm = {
     
         $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
         $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });
-        $('#challenge-finished').live('pageshow',function(event, ui) { pm.finishChallenge(); });
-        //$('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });
+        $('#challenge-finish').live('pageshow',function(event, ui) { pm.finishChallenge(event, ui); });
         
         routing.updateBikeStatsFeedCallback = pm.updateChallenges;
     },
@@ -51,7 +50,7 @@ var pm = {
     },
     
     showMap: function() {
-        var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 8909});
+        var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 24509});
         var map = new CM.Map('map', cloudmade);
         var startPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
         var endPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
@@ -62,6 +61,30 @@ var pm = {
 
         var waypoints = [startPoint, endPoint];
         directions.loadFromWaypoints(waypoints);
+    },
+    
+    finishChallenge: function(event, ui) {
+    	console.log("test", event);
+    	console.log("test", ui);
+    	// Calculate score
+    	var score = pm.calculateScores();
+    	
+    	// Post scores
+    	var action = "challenge/complete";
+    	var postData = {
+    		from_id: 1,
+    		to_id: 2,
+    		score: 10,
+    		render: json	
+    	}
+    	var node = $(this);
+
+    	$.post(action, postData, function(data) {
+    		// Update scores
+    		
+    		
+    		// Choose random Boris quote and image
+        });
     },
     
     calculateScores: function(start, end, distance) {
