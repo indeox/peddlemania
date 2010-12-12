@@ -91,7 +91,7 @@ var pm = {
     	var postData = {
     		from_id: start.ID,
     		to_id: end.ID,
-    		score: score,
+    		score: parseInt(score),
     		render: "json"	
     	}
     	var node = $(this);
