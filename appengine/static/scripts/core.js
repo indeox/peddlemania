@@ -5,16 +5,16 @@ var pm = {
     init: function() {
         // Find current location
         geo.getPosition();    
-        geo.updatePosition(); 
-        setInterval(function() { geo.updatePosition(); }, 10000);
+        //geo.updatePosition(); 
+        //setInterval(function() { geo.updatePosition(); }, 10000);
                 
         navigator.geolocation.watchPosition(geo.updatePosition);    
     
         $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
         $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });
         $('#challenge-finish').live('pageshow',function(event, ui) { pm.finishChallenge(event, ui); });
-        $('#challenge-start-button').live('click',function() { 
-            alert('start challenge');
+        $('#challenge-start-button').live('click',function() {             
+            pm.startChallenge();
         });
         
         $('#challenges .destinations a').live('click',function() { 
@@ -65,7 +65,7 @@ var pm = {
     		from_id: pm.status.challenge.start.ID,
     		to_id: pm.status.challenge.destination.ID,
     		score: 10,
-    		render: json	
+    		render: 'json'
     	}
     	$.post('/challenge/start', postData, function(data) {
 
