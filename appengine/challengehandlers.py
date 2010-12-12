@@ -24,7 +24,6 @@ class ChallengeSelectHandler(ViewController):
 		self.get()
 
 
-
 class ChallengeCompleteHandler(ViewController):
 	def get(self):
 		self.post()  #make sure to change this.
@@ -33,7 +32,6 @@ class ChallengeCompleteHandler(ViewController):
 		to_id = self.request.get("to_id")
 		score = self.request.get("score")
 		user_details = self.getUserDetails()
-		
 		
 		if user_details is None:
 			return self.error('No user found')
@@ -58,16 +56,14 @@ class ChallengeCompleteHandler(ViewController):
 		## convert journey time to seconds..
 		m = re.match(r'(\d{1,3}):([0-5]\d):([0-5]\d)\.\d*$', str(start_end_diff))
 		journey_seconds = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
-			
-			
-		#user_journey.incomplete = False
+				
+		user_journey.incomplete = False
 		user_journey.completed_time = int(journey_seconds)
 		user_journey.score = score
 		user_journey.put()
 		
 		user_details.total_score += score
 		user_details.put()
-		
 		
 		### work out if this user journey is the fastest time of them all
 		fastest_user = False
@@ -115,6 +111,7 @@ class ChallengeHandler(ViewController):
 		to_id = self.request.get("to_id")
 		distance = self.request.get("distance")
 		fullness_score = self.request.get("fullness_score")
+		
 		user_details = self.getUserDetails()
 		
 		logging.info(user_details)
@@ -129,14 +126,19 @@ class ChallengeHandler(ViewController):
 
 		if distance is None or distance <= 0 or distance == '':
 			return self.error('Distance must be a float')
-			
-		if (from_id is None or to_id is None) or (from_id == '' or to_id == ''):
-			return self.error('Must provide From and To locations')
+		
+		from_place = models.Place.get(from_id)
+		to_place = models.Place.get(to_id)
+		
+		if (from_place is None or to_place is None):
+			return self.error('Must valid provide From and To locations')
+		
+		logging.info(models.Place.get_by_key_name(from_id))
 		
 		if journey is None:
 			j_key = models.Journey.generate_key(from_id, to_id)
 			logging.info('Journey key: %s' % j_key)
-			journey = models.Journey(key_name=j_key, distance=float(distance))
+			journey = models.Journey(key_name=j_key, distance=float(distance), to_place=to_place, from_place=from_place)
 			journey.put()
 		
 		q = models.UserJourney.gql("WHERE user = :1 AND journey = :2", user_details, journey)
@@ -149,4 +151,7 @@ class ChallengeHandler(ViewController):
 		user_details.journeys.append(user_journey.key())
 		user_details.put()
 			
-		return self.output('challenge', {'user_journey': user_journey, 'journey': journey, 'user': user_details})
+		return self.output('challenge', {'user_journey_id': user_journey.key(), 'user_journey': user_journey, 'journey': journey, 'user': user_details})
+
+
+

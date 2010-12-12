@@ -17,34 +17,18 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
-
-import oauth
-
 import models
 import logging
-from datetime import tzinfo, timedelta, datetime, date
-import re
+
+import simplejson
+import urllib
+import urllib2
+from django.utils import simplejson
 
 from viewcontroller import ViewController
 
 from challengehandlers import ChallengeSelectHandler, ChallengeHandler, ChallengeCompleteHandler
-
-OAUTH_APP_SETTINGS = {
-
-    'twitter': {
-
-        'consumer_key': '13t994ZKfhhmdmFQbsNeg',
-        'consumer_secret': 'I7i1nTU0ckUb74AXpIXiIy305GV4BOXzqobh4gsfNqQ',
-
-        'request_token_url': 'https://twitter.com/oauth/request_token',
-        'access_token_url': 'https://twitter.com/oauth/access_token',
-        'user_auth_url': 'http://twitter.com/oauth/authorize',
-
-        'default_api_prefix': 'http://twitter.com',
-        'default_api_suffix': '.json',
-
-        }
-    }
+from userhandlers import CompleteAuthorisationHandler, NewUserHandler, AuthoriseUserHandler, AuthoriseUserCompleteHandler, UserHandler, NewUserHandler
 
 
 class MainHandler(ViewController):
@@ -54,91 +38,43 @@ class MainHandler(ViewController):
 		return self.output('home')
 		#else:
 		#	return self.redirect('/u/new')
-
-
-class AuthoriseUserCompleteHandler(ViewController):
-	def get(self):
-	
-		oauth_token = self.request.cookies.get('oauth_token')
-		
-		if oauth_token is None:
-			raise Exception("No Twitter access token")
-			
-		token = models.OAuthAccessToken.get_by_key_name(oauth_token)
-		if oauth_token is None:
-			raise Exception("No Twitter access - could not verify token")
-		
-		
-		user = models.User.get_by_key_name(token.user_id)
-	
-		return self.output('user/authorise_complete', {'user': user, 'token': token})
 	def post(self):
-		return self.get()
+		self.get()
+
 
 class HiScoreHandler(ViewController):
-	pass
-	
-class UserHandler(ViewController):
-	pass
-
-
-
-class NewUserHandler(ViewController):
+	def get(self):
+		pass	
 	def post(self):
-		return self.get()
+		self.get()
+	
+
+class PopulateHandler(ViewController):
+
 	def get(self):
-		return self.output('user/new')
-
-
-class AuthoriseUserHandler(ViewController):
-	def get(self):
-		callback_url = "%s/oauth/complete" % self.request.host_url
-    
-		client = oauth.TwitterClient(OAUTH_APP_SETTINGS['twitter']['consumer_key'], OAUTH_APP_SETTINGS['twitter']['consumer_secret'], callback_url)
-		return self.redirect(client.get_authorization_url())
-
-
-class CompleteAuthorisationHandler(ViewController):
-	def get(self):
-		callback_url = "%s/oauth/complete" % self.request.host_url
-		client = oauth.TwitterClient(OAUTH_APP_SETTINGS['twitter']['consumer_key'], OAUTH_APP_SETTINGS['twitter']['consumer_secret'], callback_url)
-		
-		auth_token = self.request.get("oauth_token")
-		auth_verifier = self.request.get("oauth_verifier")
-		user_info = client.get_user_info(auth_token, auth_verifier=auth_verifier)
+	
+		url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%3D'http://api.bike-stats.co.uk/service/rest/bikestats'&format=json&diagnostics=true"
 
 		
-		timeline_url = "http://twitter.com/statuses/user_timeline.xml"
-		result = client.make_request(url=timeline_url, token=auth_token, secret=auth_verifier)
-
-		if user_info['username'] is None:
-			raise Exception("no username")
-			
-		user_timeline = "twitter.com/statuses/user_timeline/%s.rss" % user_info['id']
+		page = urllib2.urlopen(url)
+		if page:
+			data = page.read()
+			result = simplejson.loads(data)
+			if result['query'] is None:
+				return
+			if result['query']['results'] is None:
+				return
+				
+			for station in result['query']['results']['dockStationList']['dockStation']:
+				name = station['name'].replace('\n', '').lstrip("\s")
+				id = models.Place.generate_key(station['ID'])
+				place = models.Place.get_or_insert(key_name=id, name=name, lat=float(station['latitude']), long=float(station['longitude']))
+				#place = models.Place.create(station['ID'], name=name, lat=float(station['latitude']), long=float(station['longitude']))
+				place.put()
+				
+				#logging.info(models.Place.get(station['ID']))
+				#logging.info(models.Place.get_by_key_name()))
 		
-		user = models.User.get_or_insert(key_name=user_info['username'], 
-													name=user_info['name'], 
-													user_id=user_info['username'],
-													user_timeline=user_timeline, 
-													image=user_info['picture'],
-													lang='en')
-		
-		if user is None:
-			raise Exception("No user created")
-		
-		
-		oauth_token = models.OAuthAccessToken.get_or_insert(key_name=user_info['token'], 
-																user_id=user_info['username'],
-																oauth_token=user_info['token'], 
-																oauth_token_secret=user_info['secret'])
-
-		self.redirect('/u/authorise/complete')
-		self.response.headers.add_header('Set-Cookie', ('oauth_token=%s; expires=Sun, 12-December-2050 23:59:59 GMT; path=/;' % user_info['token'])) 
-		
-		
-		return		
-
-
 
 def main():
 
@@ -161,6 +97,8 @@ def main():
 										
 										
 										('/hiscores', HiScoreHandler),
+										
+										('/task/populate', PopulateHandler),
 										],
 										 debug=True)
 	util.run_wsgi_app(application)
