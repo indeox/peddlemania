@@ -33,8 +33,7 @@ var pm = {
         var html  = '<img src="http://maps.google.com/maps/api/staticmap?center='+challenges.start.latitude+','+challenges.start.longitude+'&zoom=15&size='+startThumbSize+'&format=png&maptype=roadmap&sensor=false" />'
 				  + '<h2>Start Point - '+challenges.start.name+'</h2>'
 				  + '<p class="ui-li-desc">Distance: <strong>'+Math.round(challenges.start.distance*100)/100+'km</strong></p>'
-				  + '<p class="ui-li-desc">Bikes available: <strong>'+challenges.start.bikesAvailable+'</strong></p>'
-			      + '</li>';
+				  + '<p class="ui-li-desc">Bikes available: <strong>'+challenges.start.bikesAvailable+'</strong></p>';
 			      
 			      //alert(html);
         //$('#challenges [data-role="content"]').html(html); 
@@ -73,7 +72,7 @@ var pm = {
     },
     
     showMap: function() {
-        var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 24509});
+        var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 28521});
         var map = new CM.Map('map', cloudmade);
         var startPoint = new CM.LatLng(parseFloat(pm.status.challenge.start.latitude), parseFloat(pm.status.challenge.start.longitude));
         var endPoint = new CM.LatLng(parseFloat(pm.status.challenge.destination.latitude), parseFloat(pm.status.challenge.destination.longitude));
@@ -108,11 +107,11 @@ var pm = {
     	var node = $(this);
 
     	$.post(action, postData, function(data) {
-    		console.log("data", data);
+    		//console.log("data", data);
     		// Update scores
     		
-    		
     		// Choose random Boris quote and image
+    		
         });
     },
     
