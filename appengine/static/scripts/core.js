@@ -62,10 +62,11 @@ var pm = {
     },
     
     showMap: function() {
+    	console.log(pm.status);
         var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 24509});
         var map = new CM.Map('map', cloudmade);
-        var startPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
-        var endPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
+        var startPoint = new CM.LatLng(parseFloat(pm.status.challenge.start.latitude), parseFloat(pm.status.challenge.start.longitude));
+        var endPoint = new CM.LatLng(parseFloat(pm.status.challenge.destination.latitude), parseFloat(pm.status.challenge.destination.longitude));
         
         map.setCenter(startPoint, 16);
         
@@ -78,6 +79,9 @@ var pm = {
     finishChallenge: function(event, ui) {
     	console.log("test", event);
     	console.log("test", ui);
+    	
+    	console.log(pm.status);
+    	
     	// Calculate score
     	var score = pm.calculateScores();
     	

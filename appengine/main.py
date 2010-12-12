@@ -43,7 +43,6 @@ class MainHandler(ViewController):
 			if user_details.journeys is not None and len(user_details.journeys):
 				last_journey_key = user_details.journeys[-1]
 				last_journey = models.UserJourney.gql("WHERE __key__ = :1", last_journey_key).get()
-				logging.info(last_journey)
 		
 			return self.output('home', {
 														'no_of_journeys': no_of_journeys,
