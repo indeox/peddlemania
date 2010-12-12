@@ -13,6 +13,10 @@ var pm = {
         $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
         $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });
         $('#challenge-finish').live('pageshow',function(event, ui) { pm.finishChallenge(event, ui); });
+        $('#challenge-start-button').live('click',function() { 
+            alert('start challenge');
+        });
+        
         $('#challenges .destinations a').live('click',function() { 
             var dockId = $(this).parents('li').attr('id').replace('dock-',''); 
             pm.status.challenge.destination = pm.data.docks[dockId];        
@@ -56,9 +60,16 @@ var pm = {
         pm.status.challenge.start = challenges.start;
     },
     
-    setChallenge: function(destinationDockId) {
-        
-    
+    startChallenge: function(destinationDockId) {
+    	var postData = {
+    		from_id: pm.status.challenge.start.ID,
+    		to_id: pm.status.challenge.destination.ID,
+    		score: 10,
+    		render: json	
+    	}
+    	$.post('/challenge/start', postData, function(data) {
+
+        });            
     },
     
     showMap: function() {
