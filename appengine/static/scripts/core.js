@@ -62,7 +62,6 @@ var pm = {
     },
     
     showMap: function() {
-    	console.log(pm.status);
         var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 24509});
         var map = new CM.Map('map', cloudmade);
         var startPoint = new CM.LatLng(parseFloat(pm.status.challenge.start.latitude), parseFloat(pm.status.challenge.start.longitude));
@@ -74,14 +73,12 @@ var pm = {
 
         var waypoints = [startPoint, endPoint];
         directions.loadFromWaypoints(waypoints);
+        
+        // Update header
+        $("#challenge-progress .to").html(pm.status.challenge.destination.name);
     },
     
     finishChallenge: function(event, ui) {
-    	console.log("test", event);
-    	console.log("test", ui);
-    	
-    	console.log(pm.status);
-    	
     	var start = pm.status.challenge.start;
     	var end = pm.status.challenge.destination;
     	var distance = Math.round(pm.status.challenge.destination.distance);
