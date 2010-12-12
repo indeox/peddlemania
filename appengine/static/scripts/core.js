@@ -107,7 +107,7 @@ var pm = {
     	var node = $(this);
 
     	$.post(action, postData, function(data) {
-    		//console.log("data", data);
+    		console.log("data", data);
     		// Update scores
     		
     		// Choose random Boris quote and image
