@@ -22,33 +22,10 @@ class User(db.Model):
   	total_score = db.IntegerProperty(default=0)
   	journeys = db.ListProperty(db.Key)
  
-
-class Place(db.Model):
-	name = db.StringProperty()
-	lat = db.FloatProperty()
-	long = db.FloatProperty()
-	
-	@classmethod
-	def generate_key(cls, id):
-		return "place_%s" % (id)
-		
-  	@classmethod
-	def get(cls, id):
-		key = cls.generate_key(id)
-		return cls.get_by_key_name(key)
-		
-  	@classmethod
-	def create(cls, id, **kwargs):
-		key = cls.generate_key(id)
-		logging.info(kwargs)
-		return cls.get_or_insert(key_name=id, **kwargs)
-		
 	
 class Journey(db.Model):
 	from_id = db.IntegerProperty()
 	to_id = db.IntegerProperty()
-	from_place = db.ReferenceProperty(Place, collection_name='from')
-	to_place = db.ReferenceProperty(Place, collection_name='to')
 	distance = db.FloatProperty()
 	fastest_user = db.ReferenceProperty(User, collection_name='fastest_time')
 	num_of_journeys = db.IntegerProperty(default=0)
@@ -68,7 +45,7 @@ class UserJourney(db.Model):
  	journey = db.ReferenceProperty(Journey)
  	user = db.ReferenceProperty(User)
  	date = db.DateTimeProperty(auto_now_add=True)
- 	completed_time = db.IntegerProperty()
+ 	completed_time = db.StringProperty()
  	fullness_score = db.IntegerProperty(default=0)
  	incomplete = db.BooleanProperty(default=True)
  	score = db.IntegerProperty(default=0)
