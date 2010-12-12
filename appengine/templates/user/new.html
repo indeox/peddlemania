@@ -11,9 +11,13 @@
 		{% if message %}<span class="error">{{ message }}</span>{% endif %}
 		<p>	
 			{% if not auth %}
-				<a href="/u/authorise" rel="external">Login via Twitter</a>
+				<p><img src="/images/twitter_logo_s.png" alt="Twitter.com logo" /></p>
+				<p><a href="/u/authorise" rel="external">Sign in using Twitter</a>.</p>
+				<p>We promise never to send Tweets on your behalf without first asking permission. And just so
+				you know, we'll look over your Twitter friends 
+				to help you set up Pedal Mania challenges against them!</p>
 			{% else %}
-				user authorised 
+				You have already signed in using your Twitter account.
 			{% endif %}
 		</p>
 	</div>

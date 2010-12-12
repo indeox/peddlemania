@@ -4,7 +4,7 @@
 {% if message %}<span class="error">{{ message }}</span>{% endif %}
 
 {% if not auth %}
-<a href="/oauth/twitter/login">Login via Twitter</a>
+<a href="/oauth/twitter/login"  rel="external">Login via Twitter</a>
 {% else %}
 user authorised 
 {% endif %}
