@@ -1,0 +1,14 @@
+.start {
+    padding: 4px;
+}
+.start img {
+    float: left;
+    margin-right: 8px;
+}
+.start h2 {
+    margin-bottom: 16px;
+}
+
+#challenges .ui-li-thumb {
+    margin: 2px 4px;
+}
