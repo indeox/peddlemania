@@ -39,12 +39,14 @@ class MainHandler(ViewController):
 			
 			user_details = self.getUserDetails()
 			no_of_journeys = len(user_details.journeys)
-			last_journey = user_details.journeys[-1]
+			last_journey_key = user_details.journeys[-1]
+			last_journey = models.UserJourney.gql("WHERE __key__ = :1", last_journey_key).get()
 			logging.info(last_journey)
 		
 			return self.output('home', {
 														'no_of_journeys': no_of_journeys,
-														'user': user_details
+														'user': user_details,
+														'last_journey': last_journey,
 													})
 		else:
 			return self.redirect('/u/new')
