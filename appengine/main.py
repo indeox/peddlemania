@@ -199,11 +199,7 @@ class ChallengeCompleteHandler(ViewController):
 		fastest_user_journey = q.get()
 		logging.info(fastest_user_journey.completed_time)
 		if fastest_user_journey:
-		
-			m = re.match(r'(\d{1,3}):([0-5]\d):([0-5]\d)\.\d*$', fastest_user_journey.completed_time)
-			current_record_seconds = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
-
-			if journey_seconds > current_record_seconds:
+			if journey_seconds > fastest_user_journey.completed_time:
 				fastest_user = True
 				journey.fastest_user = user_details
 		else:

@@ -19,6 +19,12 @@ indexes:
 - kind: UserJourney
   properties:
   - name: journey
+  - name: score
+    direction: desc
+
+- kind: UserJourney
+  properties:
+  - name: journey
   - name: user
   - name: completed_time
     direction: desc
