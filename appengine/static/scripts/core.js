@@ -9,7 +9,8 @@ var pm = {
         navigator.geolocation.watchPosition(geo.updatePosition);    
     
         $('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });    
-        $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });  
+        $('#challenge-progress').live('pageshow',function(event, ui) { pm.showMap(); });
+        $('#challenge-finished').live('pageshow',function(event, ui) { pm.calculateScores(); });
         //$('#challenges').live('pageshow',function(event, ui) { pm.updateChallenges(); });
         
         routing.updateBikeStatsFeedCallback = pm.updateChallenges;
@@ -50,7 +51,6 @@ var pm = {
     },
     
     showMap: function() {
-    	
         var cloudmade = new CM.Tiles.CloudMade.Web({key: 'c8a3643e0bb842b4a4491d0b96754cff', styleId: 8909});
         var map = new CM.Map('map', cloudmade);
         var startPoint = new CM.LatLng(pm.status.position.lat, pm.status.position.lon);
@@ -62,6 +62,15 @@ var pm = {
 
         var waypoints = [startPoint, endPoint];
         directions.loadFromWaypoints(waypoints);
+    },
+    
+    calculateScores: function(start, end, distance) {
+    	var p1 = ((start.totalSlots - start.emptySlots)/start.totalSlots) * 100; // Start station fullness percentage
+    	var p2 = ((end.totalSlots - end.emptySlots)/end.totalSlots) * 100;;// End station fullness percentage	
+    	var f = p1 - p2; // Fullness factor
+    	var D = 10; // Distance factor
+    	
+    	return score = distance * D * f;
     }
 
 };
